@@ -53,12 +53,12 @@ export function AppProvider({ children }) {
         }, 20)
     }
 
-    const [yearsLived, setYearsLived] = useState(undefined)
-    const [monthsLived, setMonthsLived] = useState(undefined)
-    const [daysLived, setDaysLived] = useState(undefined)
-    const [hoursLived, setHoursLived] = useState(undefined)
-    const [minutesLived, setMinutesLived] = useState(undefined)
-    const [secondsLived, setSecondsLived] = useState(undefined)
+    const [yearsLived, setYearsLived] = useState(0)
+    const [monthsLived, setMonthsLived] = useState(0)
+    const [daysLived, setDaysLived] = useState(0)
+    const [hoursLived, setHoursLived] = useState(0)
+    const [minutesLived, setMinutesLived] = useState(0)
+    const [secondsLived, setSecondsLived] = useState(0)
 
     const ageLived = (
         yearBorn,
@@ -71,17 +71,20 @@ export function AppProvider({ children }) {
         todaySecond
     ) => { 
         // years lived
-        setYearsLived(todayYear - yearBorn)
+        if(monthBorn > todayMonth) 
+            setYearsLived(todayYear - yearBorn - 1)
+        else setYearsLived(todayYear - yearBorn)
 
         // months lived
-        setMonthsLived(todayMonth - monthBorn)
-        if (monthsLived < 0) {
-           setMonthsLived(12 + monthsLived)
-            setMonthsLived(monthsLived + (todayYear - yearBorn - 1) * 12)
-        } else setMonthsLived(monthsLived + (todayYear - yearBorn) * 12)
+       
+        if (todayMonth - monthBorn < 0)
+            setMonthsLived(todayMonth + (monthBorn - 12) + (todayYear - yearBorn - 1) * 12)
+        else setMonthsLived(todayMonth + (todayYear - yearBorn) * 12)
         
+
+        /// WRONG DOWN HERE
+
         // days lived
-        setDaysLived(todayDay - dayBorn)
         if (daysLived < 0) {
             setDaysLived(31 + daysLived)
             setDaysLived(daysLived + (todayMonth - monthBorn - 1) * 31)
@@ -96,6 +99,10 @@ export function AppProvider({ children }) {
         // seconds lived
         setSecondsLived(minutesLived * 60 + todaySecond)
     }
+
+    useEffect(() => {
+        console.log(monthsLived)
+    }, [monthsLived])
 
     const value = {
         setInputFilled,
