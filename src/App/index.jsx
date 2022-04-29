@@ -1,24 +1,13 @@
-import React, { useState } from 'react'
-
+import React, { useEffect, useState, useRef } from 'react'
 import { Main } from './styles.js'
 import { useApp } from '../context/AppContext.jsx'
-import { InputAge, InputName, CountUp } from '../components'
+import { Input, CountUp } from '../components'
 
 export default function App() {
-  const { bornDate, name } = useApp()
-
-  const localName = localStorage.getItem('name')
-  const localBornDate = localStorage.getItem('borndate')
-
-  console.log(localName, localBornDate)
-
+  const { inputFilled } = useApp()
   return (
     <Main>
-      {name || localName ?
-        bornDate || localBornDate ?
-          <CountUp /> : <InputAge />
-        : <InputName />
-      }
+      {inputFilled ? <CountUp /> :  <Input />}
     </Main>
   )
 }
